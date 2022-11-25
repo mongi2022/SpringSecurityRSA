@@ -1,9 +1,12 @@
 package com.tpc.Securityservice;
 
+import com.tpc.Securityservice.config.RsaKeysConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @SpringBootApplication
+@EnableConfigurationProperties(RsaKeysConfig.class)
 public class SecurityServiceApplication {
 
 	public static void main(String[] args) {

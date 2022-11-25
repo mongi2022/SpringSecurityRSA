@@ -1,5 +1,10 @@
 package com.tpc.Securityservice.config;
 
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -10,14 +15,22 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
-import javax.servlet.FilterChain;
+import com.nimbusds.jose.jwk.RSAKey;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    private RsaKeysConfig rsaKeysConfig;
+
+    public SecurityConfig(RsaKeysConfig rsaKeysConfig) {
+        this.rsaKeysConfig = rsaKeysConfig;
+    }
+
     @Bean
     public InMemoryUserDetailsManager inMemoryUserDetailsManager(){
         return new InMemoryUserDetailsManager(
@@ -37,10 +50,14 @@ public class SecurityConfig {
           .httpBasic(Customizer.withDefaults())
           .build();
     }
-//    JwtEncoder jwtEncoder(){
-//
-//    }
-//    JwtDecoder jwtDecoder(){
-//
-//    }
+    @Bean
+    public JwtDecoder jwtDecoder(){
+     return NimbusJwtDecoder.withPublicKey(rsaKeysConfig.publicKey()).build();
+    }
+    @Bean
+   public JwtEncoder jwtEncoder(){
+       JWK jwk= new RSAKey.Builder(rsaKeysConfig.publicKey()).privateKey(rsaKeysConfig.privateKey()).build();
+       JWKSource<SecurityContext> jwkSource= new ImmutableJWKSet<>(new JWKSet(jwk));
+       return new NimbusJwtEncoder(jwkSource);    }
+
 }

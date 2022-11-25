@@ -1,0 +1,22 @@
+{
+  "groups": [
+    {
+      "name": "rsa",
+      "type": "com.tpc.Securityservice.config.RsaKeysConfig",
+      "sourceType": "com.tpc.Securityservice.config.RsaKeysConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "rsa.private-key",
+      "type": "java.security.interfaces.RSAPrivateKey",
+      "sourceType": "com.tpc.Securityservice.config.RsaKeysConfig"
+    },
+    {
+      "name": "rsa.public-key",
+      "type": "java.security.interfaces.RSAPublicKey",
+      "sourceType": "com.tpc.Securityservice.config.RsaKeysConfig"
+    }
+  ],
+  "hints": []
+}
